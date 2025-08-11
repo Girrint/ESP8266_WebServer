@@ -1,0 +1,70 @@
+String sendHTML() {
+  String ptr = "<!DOCTYPE html><html lang='vi'>\n";
+  ptr += "<head>\n";
+  ptr += "<meta charset='UTF-8'>\n";
+  ptr += "<title>Pháo hoa ESP8266</title>\n";
+  ptr += "<style>\n";
+  ptr += "body { margin:0; background:black; overflow:hidden; }\n";
+  ptr += "canvas { display:block; }\n";
+  ptr += "</style>\n";
+  ptr += "</head>\n<body>\n";
+  ptr += "<canvas id='fireworks'></canvas>\n";
+  ptr += "<script>\n";
+
+  ptr += "const canvas = document.getElementById('fireworks');\n";
+  ptr += "const ctx = canvas.getContext('2d');\n";
+  ptr += "canvas.width = window.innerWidth;\n";
+  ptr += "canvas.height = window.innerHeight;\n";
+
+  ptr += "class Particle {\n";
+  ptr += "  constructor(x, y, color) {\n";
+  ptr += "    this.x = x;\n";
+  ptr += "    this.y = y;\n";
+  ptr += "    this.radius = Math.random() * 2 + 1;\n";
+  ptr += "    this.color = color;\n";
+  ptr += "    this.speed = Math.random() * 5 + 1;\n";
+  ptr += "    this.angle = Math.random() * 2 * Math.PI;\n";
+  ptr += "    this.alpha = 1;\n";
+  ptr += "  }\n";
+  ptr += "  update() {\n";
+  ptr += "    this.x += Math.cos(this.angle) * this.speed;\n";
+  ptr += "    this.y += Math.sin(this.angle) * this.speed;\n";
+  ptr += "    this.alpha -= 0.01;\n";
+  ptr += "  }\n";
+  ptr += "  draw() {\n";
+  ptr += "    ctx.globalAlpha = this.alpha;\n";
+  ptr += "    ctx.beginPath();\n";
+  ptr += "    ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);\n";
+  ptr += "    ctx.fillStyle = this.color;\n";
+  ptr += "    ctx.fill();\n";
+  ptr += "  }\n";
+  ptr += "}\n";
+
+  ptr += "let particles = [];\n";
+  ptr += "function createFirework() {\n";
+  ptr += "  const x = Math.random() * canvas.width;\n";
+  ptr += "  const y = Math.random() * canvas.height / 2;\n";
+  ptr += "  const color = `hsl(${Math.random() * 360}, 100%, 50%)`;\n";
+  ptr += "  for (let i = 0; i < 100; i++) {\n";
+  ptr += "    particles.push(new Particle(x, y, color));\n";
+  ptr += "  }\n";
+  ptr += "}\n";
+
+  ptr += "function animate() {\n";
+  ptr += "  ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';\n";
+  ptr += "  ctx.fillRect(0, 0, canvas.width, canvas.height);\n";
+  ptr += "  particles.forEach((p, i) => {\n";
+  ptr += "    p.update();\n";
+  ptr += "    p.draw();\n";
+  ptr += "    if (p.alpha <= 0) particles.splice(i, 1);\n";
+  ptr += "  });\n";
+  ptr += "  requestAnimationFrame(animate);\n";
+  ptr += "}\n";
+
+  ptr += "setInterval(createFirework, 1000);\n";
+  ptr += "animate();\n";
+  ptr += "</script>\n";
+  ptr += "</body></html>\n";
+
+  return ptr;
+}
