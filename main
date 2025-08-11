@@ -1,0 +1,43 @@
+#include <ESP8266WiFi.h>
+#include <ESP8266WebServer.h>
+
+const char* ssid = "MyNode";
+const char* password = "999999999";
+
+IPAddress local_ip(192,168,1,1);
+IPAddress gateway(192,168,1,1);
+IPAddress subnet(255,255,255,0);
+
+ESP8266WebServer server(80);
+
+void setup(){
+  WiFi.softAP(ssid, password);
+  WiFi.softAPConfig(local_ip, gateway, subnet);
+  delay(100);
+
+  server.on("/", handle_OnConnect);
+  server.onNotFound(handle_NotFound);
+
+  server.begin();
+  Serial.println("HTTP server started");
+}
+
+void loop(){
+  server.handleClient();
+}
+
+void handle_OnConnect(){
+  server.send(200, "text/html", sendHTML());
+}
+
+void handle_NotFound(){
+  server.send(404, "text/plain", "Not Found");
+}
+
+String sendHTML(){
+  String ptr = "<!DOCTYPE html><html>\n";
+    ptr += "<head><title>ESP8266 Web Server</title></head>\n";
+    ptr += "<body><h1>Hello ESP8266!</h1></body>\n";
+    ptr += "</html>";
+  return ptr;
+}
